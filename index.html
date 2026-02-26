@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>Ficha D&D v4.1 (Lista para GitHub)</title>
+<title>Ficha D&D v4.4 (Guardado Optimizado)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <style>
 :root{
@@ -21,7 +21,7 @@ button:disabled{opacity:.6;cursor:not-allowed;}
 button:hover:not(:disabled){filter:brightness(1.2);}
 input:read-only{background:#222;border-color:#333;color:#aaa;}
 
-/* CORRECCIÓN VISUAL: Forzar estilos en inputs de solo lectura importantes */
+/* CORRECCIÓN VISUAL */
 input.readonly-highlight, #bonifAtq, #cdSalv, #bonifComp {
   background: #000 !important;
   color: #fff !important;
@@ -154,6 +154,11 @@ input.readonly-highlight, #bonifAtq, #cdSalv, #bonifComp {
 .modal-buttons button { padding: 8px 20px; font-size: 1rem; }
 .btn-modal-cancel { background: var(--gray); }
 .btn-modal-confirm { background: var(--exito); }
+
+/* Footer y Guardado */
+.footer-controls { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.footer-controls button { flex: 1; min-width: 120px; }
+.save-status { width: 100%; text-align: center; font-size: 0.8rem; color: var(--gray); margin-top: 5px; }
 @media (max-width: 900px) { 
 img { 
    max-width: 100%;
@@ -185,7 +190,7 @@ td, th {
 <header style="text-align:center;font-size:1.4em;margin-bottom:6px;">Ficha D&D (Automatizada)</header>
 <nav class="nav">
   <button class="active" onclick="switchTab('general',event)">General</button>
-  <button onclick="switchTab('action',event)">Accion</button>
+  <button onclick="switchTab('action',event)">Acción</button>
   <button onclick="switchTab('inventory',event)">Inventario</button>
   <button onclick="switchTab('spells',event)">Hechizos</button>
   <button onclick="switchTab('traits',event)">Rasgos</button>
@@ -195,7 +200,7 @@ td, th {
 <!-- MODAL -->
 <div id="modalOverlay" class="modal-overlay">
   <div class="modal-content">
-    <h3 id="modalTitle">Titulo</h3>
+    <h3 id="modalTitle">Título</h3>
     <div id="modalBody"></div>
     <div class="modal-buttons">
       <button class="btn-modal-cancel" onclick="closeModal()">Cancelar</button>
@@ -206,6 +211,8 @@ td, th {
 
 <!-- ======================== GENERAL ======================== -->
 <section id="general" class="tab active">
+  <!-- Advertencia eliminada según solicitud -->
+  
   <div class="section flex">
     <input id="nombre" placeholder="Nombre" style="min-width:120px;" autocomplete="off">
     <label>Nivel<input id="nivel" type="number" min="1" max="20" style="width:48px;" onchange="actualizarCalculos()"></label>
@@ -226,37 +233,37 @@ td, th {
     <label>Casillas<input id="velCas" type="number" min="0" value="6" oninput="calcVel('cas')"></label>
   </div></div>
   
-  <div class="section"><h3>Salvacion contra la muerte</h3><div class="flex" style="gap:4px">
-    <button class="salv-btn" data-type="exito" data-state="off" onclick="toggleSalvacion(this)">V</button>
-    <button class="salv-btn" data-type="exito" data-state="off" onclick="toggleSalvacion(this)">V</button>
-    <button class="salv-btn" data-type="exito" data-state="off" onclick="toggleSalvacion(this)">V</button>
-    <button class="salv-btn" data-type="fallo" data-state="off" onclick="toggleSalvacion(this)">X</button>
-    <button class="salv-btn" data-type="fallo" data-state="off" onclick="toggleSalvacion(this)">X</button>
-    <button class="salv-btn" data-type="fallo" data-state="off" onclick="toggleSalvacion(this)">X</button>
+  <div class="section"><h3>Salvación contra la muerte</h3><div class="flex" style="gap:4px">
+    <button class="salv-btn" data-type="exito" data-state="off" onclick="toggleSalvacion(this)">✅</button>
+    <button class="salv-btn" data-type="exito" data-state="off" onclick="toggleSalvacion(this)">✅</button>
+    <button class="salv-btn" data-type="exito" data-state="off" onclick="toggleSalvacion(this)">✅</button>
+    <button class="salv-btn" data-type="fallo" data-state="off" onclick="toggleSalvacion(this)">❌</button>
+    <button class="salv-btn" data-type="fallo" data-state="off" onclick="toggleSalvacion(this)">❌</button>
+    <button class="salv-btn" data-type="fallo" data-state="off" onclick="toggleSalvacion(this)">❌</button>
   </div></div>
   
-  <div class="section"><h3>Maestria con armas y armaduras</h3><textarea id="maestrias" rows="3" placeholder="Ej. Cimitarra, armadura media, escudo..." onchange="guardarGeneral()"></textarea></div>
+  <div class="section"><h3>Maestría con armas y armaduras</h3><textarea id="maestrias" rows="3" placeholder="Ej. Cimitarra, armadura media, escudo..." onchange="guardarGeneral()"></textarea></div>
 
   <div class="section flex">
     <label>Bonif. competencia <input id="bonifComp" type="text" readonly style="width:60px;"></label>
   </div>
 
-  <!-- ESTADISTICAS -->
-  <div class="section"><h3>Estadisticas</h3><div class="stats-row">
+  <!-- ESTADÍSTICAS -->
+  <div class="section"><h3>Estadísticas</h3><div class="stats-row">
     <div class="stat-col">
-      <div class="stat-card" data-stat="inteligencia"><div class="stat-title"><span>Inteligencia</span><span><input class="mod" placeholder="mod" type="text" style="width:40px;" readonly onclick="this.select()"></span></div><label>Puntos<input class="puntos" type="number" min="0" max="20" style="width:48px;" onchange="actualizarCalculos()"></label><div class="hab-buttons"><button onclick="toggleHab(this, event)">Salvacion<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button><button onclick="toggleHab(this, event)">C. Arcano<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button><button onclick="toggleHab(this, event)">Historia<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button><button onclick="toggleHab(this, event)">Investigacion<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button><button onclick="toggleHab(this, event)">Naturaleza<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button><button onclick="toggleHab(this, event)">Religion<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button></div></div>
-      <div class="stat-card" data-stat="sabiduria"><div class="stat-title"><span>Sabiduria</span><span><input class="mod" placeholder="mod" type="text" style="width:40px;" readonly onclick="this.select()"></span></div><label>Puntos<input class="puntos" type="number" min="0" max="20" style="width:48px;" onchange="actualizarCalculos()"></label><div class="hab-buttons"><button onclick="toggleHab(this, event)">Salvacion<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button><button onclick="toggleHab(this, event)">Trato Animales<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button><button onclick="toggleHab(this, event)">Medicina<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button><button onclick="toggleHab(this, event)">Percepcion<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button><button onclick="toggleHab(this, event)">Perspicacia<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button><button onclick="toggleHab(this, event)">Supervivencia<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button></div></div>
-      <div class="stat-card" data-stat="constitucion"><div class="stat-title"><span>Constitucion</span><span><input class="mod" placeholder="mod" type="text" style="width:40px;" readonly onclick="this.select()"></span></div><label>Puntos<input class="puntos" type="number" min="0" max="20" style="width:48px;" onchange="actualizarCalculos()"></label><div class="hab-buttons"><button onclick="toggleHab(this, event)">Salvacion<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button></div></div>
+      <div class="stat-card" data-stat="inteligencia"><div class="stat-title"><span>Inteligencia</span><span><input class="mod" placeholder="mod" type="text" style="width:40px;" readonly onclick="this.select()"></span></div><label>Puntos<input class="puntos" type="number" min="0" max="20" style="width:48px;" onchange="actualizarCalculos()"></label><div class="hab-buttons"><button onclick="toggleHab(this, event)">Salvación<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button><button onclick="toggleHab(this, event)">C. Arcano<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button><button onclick="toggleHab(this, event)">Historia<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button><button onclick="toggleHab(this, event)">Investigación<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button><button onclick="toggleHab(this, event)">Naturaleza<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button><button onclick="toggleHab(this, event)">Religión<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button></div></div>
+      <div class="stat-card" data-stat="sabiduria"><div class="stat-title"><span>Sabiduría</span><span><input class="mod" placeholder="mod" type="text" style="width:40px;" readonly onclick="this.select()"></span></div><label>Puntos<input class="puntos" type="number" min="0" max="20" style="width:48px;" onchange="actualizarCalculos()"></label><div class="hab-buttons"><button onclick="toggleHab(this, event)">Salvación<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button><button onclick="toggleHab(this, event)">Trato Animales<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button><button onclick="toggleHab(this, event)">Medicina<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button><button onclick="toggleHab(this, event)">Percepción<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button><button onclick="toggleHab(this, event)">Perspicacia<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button><button onclick="toggleHab(this, event)">Supervivencia<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button></div></div>
+      <div class="stat-card" data-stat="constitucion"><div class="stat-title"><span>Constitución</span><span><input class="mod" placeholder="mod" type="text" style="width:40px;" readonly onclick="this.select()"></span></div><label>Puntos<input class="puntos" type="number" min="0" max="20" style="width:48px;" onchange="actualizarCalculos()"></label><div class="hab-buttons"><button onclick="toggleHab(this, event)">Salvación<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button></div></div>
     </div>
     <div class="stat-col">
-      <div class="stat-card" data-stat="fuerza"><div class="stat-title"><span>Fuerza</span><span><input class="mod" placeholder="mod" type="text" style="width:40px;" readonly onclick="this.select()"></span></div><label>Puntos<input class="puntos" type="number" min="0" max="20" style="width:48px;" onchange="actualizarCalculos()"></label><div class="hab-buttons"><button onclick="toggleHab(this, event)">Salvacion<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button><button onclick="toggleHab(this, event)">Atletismo<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button></div></div>
-      <div class="stat-card" data-stat="destreza"><div class="stat-title"><span>Destreza</span><span><input class="mod" placeholder="mod" type="text" style="width:40px;" readonly onclick="this.select()"></span></div><label>Puntos<input class="puntos" type="number" min="0" max="20" style="width:48px;" onchange="actualizarCalculos()"></label><div class="hab-buttons"><button onclick="toggleHab(this, event)">Salvacion<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button><button onclick="toggleHab(this, event)">Acrobacias<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button><button onclick="toggleHab(this, event)">Juego Manos<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button><button onclick="toggleHab(this, event)">Sigilo<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button></div></div>
-      <div class="stat-card" data-stat="carisma"><div class="stat-title"><span>Carisma</span><span><input class="mod" placeholder="mod" type="text" style="width:40px;" readonly onclick="this.select()"></span></div><label>Puntos<input class="puntos" type="number" min="0" max="20" style="width:48px;" onchange="actualizarCalculos()"></label><div class="hab-buttons"><button onclick="toggleHab(this, event)">Salvacion<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button><button onclick="toggleHab(this, event)">Engano<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button><button onclick="toggleHab(this, event)">Interpretacion<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button><button onclick="toggleHab(this, event)">Intimidacion<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button><button onclick="toggleHab(this, event)">Persuasion<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button></div></div>
+      <div class="stat-card" data-stat="fuerza"><div class="stat-title"><span>Fuerza</span><span><input class="mod" placeholder="mod" type="text" style="width:40px;" readonly onclick="this.select()"></span></div><label>Puntos<input class="puntos" type="number" min="0" max="20" style="width:48px;" onchange="actualizarCalculos()"></label><div class="hab-buttons"><button onclick="toggleHab(this, event)">Salvación<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button><button onclick="toggleHab(this, event)">Atletismo<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button></div></div>
+      <div class="stat-card" data-stat="destreza"><div class="stat-title"><span>Destreza</span><span><input class="mod" placeholder="mod" type="text" style="width:40px;" readonly onclick="this.select()"></span></div><label>Puntos<input class="puntos" type="number" min="0" max="20" style="width:48px;" onchange="actualizarCalculos()"></label><div class="hab-buttons"><button onclick="toggleHab(this, event)">Salvación<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button><button onclick="toggleHab(this, event)">Acrobacias<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button><button onclick="toggleHab(this, event)">Juego Manos<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button><button onclick="toggleHab(this, event)">Sigilo<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button></div></div>
+      <div class="stat-card" data-stat="carisma"><div class="stat-title"><span>Carisma</span><span><input class="mod" placeholder="mod" type="text" style="width:40px;" readonly onclick="this.select()"></span></div><label>Puntos<input class="puntos" type="number" min="0" max="20" style="width:48px;" onchange="actualizarCalculos()"></label><div class="hab-buttons"><button onclick="toggleHab(this, event)">Salvación<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button><button onclick="toggleHab(this, event)">Engaño<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button><button onclick="toggleHab(this, event)">Interpretación<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button><button onclick="toggleHab(this, event)">Intimidación<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button><button onclick="toggleHab(this, event)">Persuasión<input class="extra" placeholder="+0" onclick="event.stopPropagation()" onchange="guardarGeneral()"></button></div></div>
     </div>
   </div></div>
 </section>
 
-<!-- ======================== ACCION ======================== -->
+<!-- ======================== ACCIÓN ======================== -->
 <section id="action" class="tab">
   <div id="estadoAlerta" class="hidden"></div>
   <div id="lineaVentaja" class="flex">
@@ -269,7 +276,7 @@ td, th {
     <button id="btnPruebaATQ" class="btn-pruebaATQ" onclick="pruebaATQ()">Prueba ATQ</button>
   </div>
   <div class="section flex">
-    <button id="btnInspiracion" class="btn-inspiracion" onclick="toggleInspiracion()">Inspiracion</button>
+    <button id="btnInspiracion" class="btn-inspiracion" onclick="toggleInspiracion()">Inspiración</button>
     <button id="btnIniciativa" class="btn-iniciativa" onclick="tirarIniciativa()">Iniciativa</button>
     <input id="iniciativaBonus" type="number" placeholder="+0" style="width:40px;" autocomplete="off">
     <button id="btnVentajaIni" class="btn-vd" onclick="toggleVentajaIni()">V</button>
@@ -278,27 +285,27 @@ td, th {
 
   <div class="section">
     <h3>Notas</h3>
-    <textarea id="actionNotes" class="auto-resize" placeholder="Escribe aqui caracteristicas unicas de tu personaje..." oninput="autoResize(this); guardarGeneral();"></textarea>
+    <textarea id="actionNotes" class="auto-resize" placeholder="Escribe aquí características únicas de tu personaje..." oninput="autoResize(this); guardarGeneral();"></textarea>
   </div>
 
   <div class="section">
     <h3>Habilidades especiales</h3><div id="habSpecsList"></div>
-    <button onclick="addHabEspecial()">+ Anadir habilidad</button>
-    <button onclick="delHabEspecial()">- Borrar habilidad</button>
+    <button onclick="addHabEspecial()">+ Añadir habilidad</button>
+    <button onclick="delHabEspecial()">− Borrar habilidad</button>
   </div>
   <div class="section">
     <h3>Acciones</h3><div class="flex" id="actionsGrid"></div>
     <div id="actionDetail" class="hidden section"></div>
   </div>
   <div class="section sec-extra">
-    <h4>Accion adicional</h4>
-    <button id="btnAccAdic" onclick="usarAccAdic()">Usar accion adicional</button>
-    <textarea id="accAdic" class="action-note hidden" placeholder="Describe tu accion adicional..." onchange="guardarGeneral()"></textarea>
+    <h4>Acción adicional</h4>
+    <button id="btnAccAdic" onclick="usarAccAdic()">Usar acción adicional</button>
+    <textarea id="accAdic" class="action-note hidden" placeholder="Describe tu acción adicional…" onchange="guardarGeneral()"></textarea>
   </div>
   <div class="section sec-extra">
-    <h4>Reaccion</h4>
-    <button id="btnReaccion" onclick="usarReaccion()">Usar reaccion</button>
-    <textarea id="reaccion" class="action-note hidden" placeholder="Describe tu reaccion..." onchange="guardarGeneral()"></textarea>
+    <h4>Reacción</h4>
+    <button id="btnReaccion" onclick="usarReaccion()">Usar reacción</button>
+    <textarea id="reaccion" class="action-note hidden" placeholder="Describe tu reacción…" onchange="guardarGeneral()"></textarea>
   </div>
   <div class="section"><h3>Estados / Condiciones</h3><div class="flex" id="statesGrid"></div><div id="statePanel" class="hidden"></div></div>
   <div class="section flex">
@@ -319,7 +326,7 @@ td, th {
   </div>
   <div class="section">
     <h3>Inventario General</h3>
-    <textarea id="inventario" rows="10" style="width:100%;resize:vertical;" placeholder="Cuerdas, calderos, alimentos, botin..." onchange="guardarGeneral()"></textarea>
+    <textarea id="inventario" rows="10" style="width:100%;resize:vertical;" placeholder="Cuerdas, calderos, alimentos, botín..." onchange="guardarGeneral()"></textarea>
   </div>
   <div class="section">
     <h3>Dinero</h3><div class="dinero-grid">
@@ -335,21 +342,21 @@ td, th {
   <div class="section spell-top-row">
     <label>Mod. habilidad lanzador
       <select id="modHabLanz" onchange="actualizarCalculos()">
-        <option value="">--</option>
+        <option value="">—</option>
         <option value="inteligencia">Inteligencia</option>
-        <option value="sabiduria">Sabiduria</option>
+        <option value="sabiduria">Sabiduría</option>
         <option value="carisma">Carisma</option>
       </select>
     </label>
-    <label>CD salvacion<input id="cdSalv" type="text" style="width:60px;" readonly></label>
+    <label>CD salvación<input id="cdSalv" type="text" style="width:60px;" readonly></label>
     <label>Bonif. ataque<input id="bonifAtq" type="text" style="width:60px;" readonly></label>
   </div>
   <div class="section flex" style="justify-content:center;">
-    <button id="btnConcentracion" class="concentracion-btn" onclick="toggleConcentracion()" title="Concentracion">C</button>
-    <span id="txtConcentracion" style="margin-left:8px;">Sin concentracion</span>
+    <button id="btnConcentracion" class="concentracion-btn" onclick="toggleConcentracion()" title="Concentración">💡</button>
+    <span id="txtConcentracion" style="margin-left:8px;">Sin concentración</span>
   </div>
   <div class="section flex" style="justify-content:center;">
-    <button onclick="checkConcentracionManual()">Dano recibido</button>
+    <button onclick="checkConcentracionManual()">Daño recibido</button>
   </div>
   <div class="section">
     <h3>Slots por nivel</h3><div id="slotsGrid" class="slots-grid"></div>
@@ -360,13 +367,13 @@ td, th {
   <div class="section">
     <h3>Trucos (Nivel 0)</h3>
     <div id="cantripsList"></div>
-    <button onclick="addCantrip()">+ Anadir Truco</button>
+    <button onclick="addCantrip()">+ Añadir Truco</button>
   </div>
   
   <div class="section">
     <h3>Hechizos (Nivel 1+)</h3>
     <div id="spellsList"></div>
-    <button onclick="addSpell()">+ Anadir Hechizo</button>
+    <button onclick="addSpell()">+ Añadir Hechizo</button>
   </div>
 </section>
 
@@ -375,12 +382,12 @@ td, th {
   <div class="section">
     <h3>Dotes</h3>
     <div id="featsList"></div>
-    <button onclick="addFeat()">+ Anadir dote</button>
+    <button onclick="addFeat()">+ Añadir dote</button>
   </div>
   <div class="section">
     <h3>Rasgos</h3>
     <div id="traitsList"></div>
-    <button onclick="addTrait()">+ Anadir rasgo</button>
+    <button onclick="addTrait()">+ Añadir rasgo</button>
   </div>
 </section>
 
@@ -403,22 +410,29 @@ td, th {
       <label>Dados de golpe (ej. 1d8)<input id="dadosGolpe" placeholder="1d8" onchange="guardarGeneral()"></label>
     </div>
     <div class="mini-line">
-      <label>Descripcion fisica / personalidad<textarea id="descripcion" rows="2" style="width:100%;" onchange="guardarGeneral()"></textarea></label>
+      <label>Descripción física / personalidad<textarea id="descripcion" rows="2" style="width:100%;" onchange="guardarGeneral()"></textarea></label>
     </div>
   </div>
   <div class="section flex">
     <button class="btn-descanso" onclick="descansoCorto()">Descanso corto</button>
     <button class="btn-descanso" onclick="descansoLargo()">Descanso largo</button>
   </div>
-  <div class="section"><h3>Relaciones NPC</h3><div id="npcList"></div><button onclick="addNpc()">+ Anadir NPC</button></div>
-  <div class="section"><h3>Notas de sesion</h3><div id="sessionNotes"></div><button onclick="addSessionNote()">+ Anadir nota</button></div>
+  <div class="section"><h3>Relaciones NPC</h3><div id="npcList"></div><button onclick="addNpc()">+ Añadir NPC</button></div>
+  <div class="section"><h3>Notas de sesión</h3><div id="sessionNotes"></div><button onclick="addSessionNote()">+ Añadir nota</button></div>
   <div class="section"><h3>Historia personal</h3><textarea id="backstory" rows="5" style="width:100%;" onchange="guardarGeneral()"></textarea></div>
   <div class="section">
     <h3>Notas</h3>
     <textarea id="notasLibres" rows="3" style="width:100%;resize:vertical;" onfocus="this.rows=12" onblur="this.rows=3" onchange="guardarGeneral()"></textarea>
   </div>
 </section>
-<footer class="section flex"><button onclick="saveSheet()">Guardar ficha (JSON)</button><button onclick="loadSheet()">Cargar ficha (JSON)</button></footer>
+
+<footer class="section">
+  <div class="footer-controls">
+    <button onclick="exportSheet()">Exportar / Copiar</button>
+    <button onclick="importSheet()">Importar / Pegar</button>
+  </div>
+  <div id="saveStatus" class="save-status">Autoguardado activo</div>
+</footer>
 
 <script>
 /* ---------- UTILIDADES ---------- */
@@ -452,10 +466,10 @@ function closeModal() {
   modalCallback = null;
 }
 
-/* ---------- DATOS ESTATICOS ---------- */
-const states=[{id:"blinded",name:"Cegado",desc:"Fallas automaticamente cualquier prueba que requiera vista. Tienes desventaja en tiradas de ataque. Los ataques contra ti tienen ventaja."},{id:"charmed",name:"Encantado",desc:"No puedes atacar a quien te encanto. Tienes desventaja en pruebas de Sabiduria contra esa criatura."},{id:"deafened",name:"Sordo",desc:"Fallas automaticamente cualquier prueba que requiera oir."},{id:"frightened",name:"Asustado",desc:"Tienes desventaja en tiradas de ataque y pruebas de habilidad mientras la fuente del miedo este a la vista."},{id:"grappled",name:"Agarrado",desc:"Tu velocidad se convierte en 0. Puedes escapar con una accion."},{id:"incapacitated",name:"Incapacitado",desc:"No puedes realizar acciones ni reacciones."},{id:"invisible",name:"Invisible",desc:"Los ataques contra ti tienen desventaja. Tus ataques tienen ventaja."},{id:"paralyzed",name:"Paralizado",desc:"Estas incapacitado, fallas tiradas de fuerza y destreza, y los ataques cuerpo a cuerpo contra ti tienen ventaja y causan golpes criticos si estan a 5 ft."},{id:"petrified",name:"Petrificado",desc:"Estas paralizado y tienes resistencia a todo dano. No puedes moverte ni hablar."},{id:"poisoned",name:"Envenenado",desc:"Tienes desventaja en tiradas de ataque y pruebas de habilidad."},{id:"prone",name:"Prone",desc:"Tu unico movimiento es arrastrarte. Tienes desventaja en tiradas de ataque. Los ataques cuerpo a cuerpo contra ti tienen ventaja; a distancia, desventaja."},{id:"restrained",name:"Restringido",desc:"Tu velocidad se convierte en 0. Tienes desventaja en tiradas de destreza. Los ataques contra ti tienen ventaja."},{id:"stunned",name:"Stunned",desc:"Estas incapacitado, no puedes moverte, y fallas automaticamente tiradas de fuerza y destreza."},{id:"unconscious",name:"Inconsciente",desc:"Estas incapacitado, no puedes moverte ni hablar, fallas tiradas de fuerza y destreza, y los ataques cuerpo a cuerpo contra ti tienen ventaja y causan golpes criticos si estan a 5 ft."},{id:"exhaustion",name:"Agotamiento",desc:"Acumula niveles de agotamiento. Cada nivel reduce tu velocidad y tienes desventaja en tiradas."}];
-const actions=[{id:"cast",name:"Lanzar hechizo",desc:"Cambia a la pestana de hechizos.",goto:"spells"},{id:"dash",name:"Correr",desc:"Duplicas tu velocidad en este turno."},{id:"disengage",name:"Desengancharse",desc:"Tu movimiento no provoca ataques de oportunidad."},{id:"dodge",name:"Esquivar",desc:"Los ataques contra ti tienen desventaja."},{id:"help",name:"Ayudar",desc:"Das ventaja a un aliado."},{id:"hide",name:"Esconderse",desc:"Intentar ocultarte."},{id:"search",name:"Buscar",desc:"Investigar el area."},{id:"use",name:"Usar objeto",desc:"Interactuar con un objeto.",goto:"inventory"},{id:"ready",name:"Prepararse",desc:"Preparas una accion."},{id:"grapple",name:"Agarrar",desc:"Intentas agarrar a una criatura."},{id:"shove",name:"Derribar",desc:"Intentas derribar una criatura."}];
-const maestrias=[{id:'cleave',nombre:'Hendidura',desc:'Si aciertas, puedes hacer otro ataque a otra criatura cercana, sin sumar tu mod de habilidad al dano.'},{id:'nick',nombre:'Muesca',desc:'Puedes hacer un segundo ataque con un arma ligera sin usar accion adicional.'},{id:'push',nombre:'Empujon',desc:'Si golpeas, puedes empujar a la criatura 10 pies hacia atras.'},{id:'sap',nombre:'Debilitar',desc:'La criatura tiene desventaja en su proximo ataque.'},{id:'slow',nombre:'Ralentizar',desc:'Reduces la velocidad de la criatura hasta tu proximo turno.'},{id:'topple',nombre:'Derribo',desc:'La criatura debe hacer una salvacion de Constitucion o caer al suelo.'},{id:'graze',nombre:'Rasguno',desc:'Si fallas, haces dano igual a tu modificador de habilidad.'},{id:'vex',nombre:'Vejar',desc:'Ganas ventaja en tu proximo ataque contra esa criatura.'},{id:'flex',nombre:'Flexibilidad',desc:'Puedes usar el dano de dos manos de un arma versatil con una mano.'},{id:'none',nombre:'Ninguna',desc:'Sin maestria.'}];
+/* ---------- DATOS ESTÁTICOS ---------- */
+const states=[{id:"blinded",name:"Cegado",desc:"Fallas automáticamente cualquier prueba que requiera vista. Tienes desventaja en tiradas de ataque. Los ataques contra ti tienen ventaja."},{id:"charmed",name:"Encantado",desc:"No puedes atacar a quien te encantó. Tienes desventaja en pruebas de Sabiduría contra esa criatura."},{id:"deafened",name:"Sordo",desc:"Fallas automáticamente cualquier prueba que requiera oír."},{id:"frightened",name:"Asustado",desc:"Tienes desventaja en tiradas de ataque y pruebas de habilidad mientras la fuente del miedo esté a la vista."},{id:"grappled",name:"Agarrado",desc:"Tu velocidad se convierte en 0. Puedes escapar con una acción."},{id:"incapacitated",name:"Incapacitado",desc:"No puedes realizar acciones ni reacciones."},{id:"invisible",name:"Invisible",desc:"Los ataques contra ti tienen desventaja. Tus ataques tienen ventaja."},{id:"paralyzed",name:"Paralizado",desc:"Estás incapacitado, fallas tiradas de fuerza y destreza, y los ataques cuerpo a cuerpo contra ti tienen ventaja y causan golpes críticos si están a 5 ft."},{id:"petrified",name:"Petrificado",desc:"Estás paralizado y tienes resistencia a todo daño. No puedes moverte ni hablar."},{id:"poisoned",name:"Envenenado",desc:"Tienes desventaja en tiradas de ataque y pruebas de habilidad."},{id:"prone",name:"Prone",desc:"Tu único movimiento es arrastrarte. Tienes desventaja en tiradas de ataque. Los ataques cuerpo a cuerpo contra ti tienen ventaja; a distancia, desventaja."},{id:"restrained",name:"Restringido",desc:"Tu velocidad se convierte en 0. Tienes desventaja en tiradas de destreza. Los ataques contra ti tienen ventaja."},{id:"stunned",name:"Stunned",desc:"Estás incapacitado, no puedes moverte, y fallas automáticamente tiradas de fuerza y destreza."},{id:"unconscious",name:"Inconsciente",desc:"Estás incapacitado, no puedes moverse ni hablar, fallas tiradas de fuerza y destreza, y los ataques cuerpo a cuerpo contra ti tienen ventaja y causan golpes críticos si están a 5 ft."},{id:"exhaustion",name:"Agotamiento",desc:"Acumula niveles de agotamiento. Cada nivel reduce tu velocidad y tienes desventaja en tiradas."}];
+const actions=[{id:"cast",name:"Lanzar hechizo",desc:"Cambia a la pestaña de hechizos.",goto:"spells"},{id:"dash",name:"Correr",desc:"Duplicas tu velocidad en este turno."},{id:"disengage",name:"Desengancharse",desc:"Tu movimiento no provoca ataques de oportunidad."},{id:"dodge",name:"Esquivar",desc:"Los ataques contra ti tienen desventaja."},{id:"help",name:"Ayudar",desc:"Das ventaja a un aliado."},{id:"hide",name:"Esconderse",desc:"Intentar ocultarte."},{id:"search",name:"Buscar",desc:"Investigar el área."},{id:"use",name:"Usar objeto",desc:"Interactuar con un objeto.",goto:"inventory"},{id:"ready",name:"Prepararse",desc:"Preparas una acción."},{id:"grapple",name:"Agarrar",desc:"Intentas agarrar a una criatura."},{id:"shove",name:"Derribar",desc:"Intentas derribar una criatura."}];
+const maestrias=[{id:'cleave',nombre:'Hendidura',desc:'Si aciertas, puedes hacer otro ataque a otra criatura cercana, sin sumar tu mod de habilidad al daño.'},{id:'nick',nombre:'Muesca',desc:'Puedes hacer un segundo ataque con un arma ligera sin usar acción adicional.'},{id:'push',nombre:'Empujón',desc:'Si golpeas, puedes empujar a la criatura 10 pies hacia atrás.'},{id:'sap',nombre:'Debilitar',desc:'La criatura tiene desventaja en su próximo ataque.'},{id:'slow',nombre:'Ralentizar',desc:'Reduces la velocidad de la criatura hasta tu próximo turno.'},{id:'topple',nombre:'Derribo',desc:'La criatura debe hacer una salvación de Constitución o caer al suelo.'},{id:'graze',nombre:'Rasguño',desc:'Si fallas, haces daño igual a tu modificador de habilidad.'},{id:'vex',nombre:'Vejar',desc:'Ganas ventaja en tu próximo ataque contra esa criatura.'},{id:'flex',nombre:'Flexibilidad',desc:'Puedes usar el daño de dos manos de un arma versátil con una mano.'},{id:'none',nombre:'Ninguna',desc:'Sin maestría.'}];
 
 let sheet={};
 let slotsBloquear=false;
@@ -481,7 +495,7 @@ function switchTab(id,ev){
   guardarGeneral(); 
 }
 
-/* ---------- AUTOMATIZACION D&D 5e ---------- */
+/* ---------- AUTOMATIZACIÓN D&D 5e ---------- */
 function calcularModificador(puntos) {
   const score = parseInt(puntos) || 10;
   return Math.floor((score - 10) / 2);
@@ -519,7 +533,7 @@ function actualizarCalculos() {
               const mod = getMod(w.statAsociado || 'fuerza'); 
               const total = (w.bonus || 0) + mod + bc;
               armas[index].total = total; 
-              btn.textContent = "Atacar con " + w.nombre + " (" + w.dano + " + " + total + ")";
+              btn.textContent = `Atacar con ${w.nombre} (${w.daño} + ${total})`;
           }
       });
   }
@@ -528,7 +542,7 @@ function actualizarCalculos() {
 
 /* ---------- UTILS ---------- */
 function getMod(stat){
-  const card=document.querySelector(".stat-card[data-stat=\""+stat+"\"]");
+  const card=document.querySelector(`.stat-card[data-stat="${stat}"]`);
   let val = card?.querySelector('.mod')?.value || "0";
   return parseInt(val) || 0;
 }
@@ -543,8 +557,8 @@ function rellenaSpellDC(){
   const atqInput=document.getElementById('bonifAtq');
   
   if(!stat){
-    cdInput.value='-';
-    atqInput.value='-';
+    cdInput.value='—';
+    atqInput.value='—';
     return;
   }
   
@@ -591,9 +605,9 @@ function autoResize(el){
   el.style.height = el.scrollHeight + 'px';
 }
 
-/* ---------- HP Y CONCENTRACION ---------- */
+/* ---------- HP Y CONCENTRACIÓN ---------- */
 function sumarHP(){
-  openModal("Sumar HP", "<input type=\"number\" id=\"modalInput\" placeholder=\"Cantidad\" autofocus>", () => {
+  openModal("Sumar HP", `<input type="number" id="modalInput" placeholder="Cantidad" autofocus>`, () => {
     const val = parseInt(document.getElementById('modalInput').value) || 0;
     if(val <= 0) return;
     const actEl = document.getElementById('hpAct');
@@ -604,12 +618,12 @@ function sumarHP(){
 }
 
 function restarHP(){
-  openModal("Restar HP", "<label>El enemigo supero tu CA?</label><select id=\"modalSelect\"><option value=\"si\">Si</option><option value=\"no\">No</option></select><br><br><input type=\"number\" id=\"modalInput\" placeholder=\"Dano total\" autofocus>", () => {
+  openModal("Restar HP", `<label>¿El enemigo superó tu CA?</label><select id="modalSelect"><option value="si">Sí</option><option value="no">No</option></select><br><br><input type="number" id="modalInput" placeholder="Daño total" autofocus>`, () => {
     const supero = document.getElementById('modalSelect').value === 'si';
     let val = parseInt(document.getElementById('modalInput').value) || 0;
     
     if(!supero && val > 0) {
-        if(!confirm("El enemigo no supero la CA, pero ingresaste dano positivo. Seguir?")) return;
+        if(!confirm("El enemigo no superó la CA, pero ingresaste daño positivo. ¿Seguir?")) return;
     }
 
     if(val > 0){
@@ -626,7 +640,7 @@ function restarHP(){
       
       if(concentracionActiva) {
         setTimeout(() => {
-            if(confirm("Has recibido dano. Deseas tirar salvacion de Constitucion para mantener \""+concentracionActiva.nombre+"\"?")) {
+            if(confirm(`Has recibido daño. ¿Deseas tirar salvación de Constitución para mantener "${concentracionActiva.nombre}"?`)) {
                 checkConcentracionManual();
             }
         }, 100);
@@ -642,14 +656,14 @@ function restarHP(){
 }
 
 function checkConcentracionManual(){
-  if(!concentracionActiva){alert('No estas concentrado en ningun hechizo.');return;}
-  const res = confirm("Estas concentrado en \""+concentracionActiva.nombre+"\".\nTu tirada de salvacion fue MENOR que 10 (o la mitad del dano recibido)?");
+  if(!concentracionActiva){alert('No estás concentrado en ningún hechizo.');return;}
+  const res = confirm(`Estás concentrado en "${concentracionActiva.nombre}".\n¿Tu tirada de salvación fue MENOR que 10 (o la mitad del daño recibido)?`);
   if(res){
     concentracionActiva=null;
     actualizarUIConcentracion();
-    alert('Pierdes la concentracion.');
+    alert('Pierdes la concentración.');
     guardarGeneral();
-  } else { alert('Mantienes la concentracion.'); }
+  } else { alert('Mantienes la concentración.'); }
 }
 
 /* ---------- VENTAJA/DESVENTAJA ---------- */
@@ -662,16 +676,16 @@ function actualizarBotonesVD(){
 
 /* ---------- CONCENTRACION ---------- */
 function toggleConcentracion(){
-  if(!concentracionActiva){alert("No estas concentrado. Lanza un hechizo con concentracion.");return;}
-  openModal("Terminar concentracion", "Terminar concentracion en \""+concentracionActiva.nombre+"\"?", () => {
+  if(!concentracionActiva){alert("No estás concentrado. Lanza un hechizo con concentración.");return;}
+  openModal("Terminar concentración", `¿Terminar concentración en "${concentracionActiva.nombre}"?`, () => {
       concentracionActiva=null;actualizarUIConcentracion();guardarGeneral();
   });
 }
 function actualizarUIConcentracion(){
   const btn=document.getElementById('btnConcentracion');
   const txt=document.getElementById('txtConcentracion');
-  if(concentracionActiva){btn.classList.add('activa');txt.textContent="Concentrado: "+concentracionActiva.nombre;}
-  else{btn.classList.remove('activa');txt.textContent='Sin concentracion';}
+  if(concentracionActiva){btn.classList.add('activa');txt.textContent=`Concentrado: ${concentracionActiva.nombre}`;}
+  else{btn.classList.remove('activa');txt.textContent='Sin concentración';}
 }
 
 /* ---------- SLOTS ---------- */
@@ -680,7 +694,7 @@ function initSlots(){
   div.innerHTML = '';
   levels.forEach((cant,n)=>{
     const lvl=n+1, row=document.createElement('div');row.className='slot-row';
-    row.innerHTML="<span>N"+lvl+"</span>";
+    row.innerHTML=`<span>N${lvl}</span>`;
     for(let i=0;i<cant;i++){
       const b=document.createElement('button');b.className='hueco-btn';
       b.dataset.gastado='false';b.dataset.bloqueado='false';
@@ -704,21 +718,21 @@ function toggleSlot(btn,lvl){
   guardarGeneral();
 }
 function crearSlot(){
-  openModal("Crear Slot", "Nivel del slot (1-9): <input type=\"number\" id=\"modalInput\" min=\"1\" max=\"9\">", () => {
+  openModal("Crear Slot", "Nivel del slot (1-9): <input type='number' id='modalInput' min='1' max='9'>", () => {
     const n=parseInt(document.getElementById('modalInput').value);
-    if(!n||n<1||n>9){alert('Nivel invalido');return;}
+    if(!n||n<1||n>9){alert('Nivel inválido');return;}
     const row=[...document.querySelectorAll('.slot-row')].find(r=>r.querySelector('span').textContent==='N'+n);
-    if(!row){alert('No se encontro la fila N'+n);return;}
+    if(!row){alert('No se encontró la fila N'+n);return;}
     const nuevo=document.createElement('button');nuevo.className='hueco-btn';
-    nouveau.dataset.gastado='false';nouveau.dataset.bloqueado='false';
-    nouveau.onclick=()=>toggleSlot(nouveau,n);
-    row.appendChild(nouveau);guardarGeneral();
+    nuevo.dataset.gastado='false';nuevo.dataset.bloqueado='false';
+    nuevo.onclick=()=>toggleSlot(nuevo,n);
+    row.appendChild(nuevo);guardarGeneral();
   });
 }
 function borrarSlot(){
-  openModal("Borrar Slot", "Nivel del slot a borrar (1-9): <input type=\"number\" id=\"modalInput\" min=\"1\" max=\"9\">", () => {
+  openModal("Borrar Slot", "Nivel del slot a borrar (1-9): <input type='number' id='modalInput' min='1' max='9'>", () => {
     const n=parseInt(document.getElementById('modalInput').value);
-    if(!n||n<1||n>9){alert('Nivel invalido');return;}
+    if(!n||n<1||n>9){alert('Nivel inválido');return;}
     const row=[...document.querySelectorAll('.slot-row')].find(r=>r.querySelector('span').textContent==='N'+n);
     const huecos=[...row.querySelectorAll('.hueco-btn')];
     if(!huecos.length){alert('No quedan huecos en N'+n);return;}
@@ -755,24 +769,24 @@ function createSpellElement(sp, isCantrip) {
     const safeDesc = (sp.desc || "").replace(/</g, '&lt;').replace(/>/g, '&gt;');
     const safeLvl = sp.nivel || 0;
 
-    let html = "<div class=\"flex\" style=\"margin-bottom:4px;align-items:center;\">";
-    html += "<input placeholder=\"Nivel\" type=\"number\" min=\"0\" max=\"9\" value=\""+safeLvl+"\" style=\"width:48px;\" onchange=\"updateSpellData('"+sp.id+"', 'nivel', this.value)\">";
-    html += "<input placeholder=\"Nombre\" value=\""+safeName+"\" style=\"flex-grow:1;\" onchange=\"updateSpellData('"+sp.id+"', 'nombre', this.value)\">";
+    let html = `<div class="flex" style="margin-bottom:4px;align-items:center;">
+        <input placeholder="Nivel" type="number" min="0" max="9" value="${safeLvl}" style="width:48px;" onchange="updateSpellData('${sp.id}', 'nivel', this.value)">
+        <input placeholder="Nombre" value="${safeName}" style="flex-grow:1;" onchange="updateSpellData('${sp.id}', 'nombre', this.value)">`;
     
     if(isCantrip) {
-        html += "<button class=\"btn-usar-spell\" onclick=\"usarTruco('"+sp.id+"')\">USAR</button>";
+        html += `<button class="btn-usar-spell" onclick="usarTruco('${sp.id}')">USAR</button>`;
     } else {
-        html += "<button class=\"btn-usar-spell\" onclick=\"usarHechizo('"+sp.id+"')\">USAR</button>";
+        html += `<button class="btn-usar-spell" onclick="usarHechizo('${sp.id}')">USAR</button>`;
     }
     
-    html += "<button style=\"background:var(--fallo);margin-left:4px;\" onclick=\"deleteSpell('"+sp.id+"')\">X</button></div>";
+    html += `<button style="background:var(--fallo);margin-left:4px;" onclick="deleteSpell('${sp.id}')">X</button></div>`;
     
-    html += "<div class=\"flex\" style=\"gap:10px;font-size:0.8rem;color:#aaa;margin-bottom:4px;\">";
-    html += "<label><input type=\"checkbox\" "+(sp.concentracion?'checked':'')+" onchange=\"updateSpellData('"+sp.id+"', 'concentracion', this.checked)\"> Concentracion</label>";
-    html += "<label><input type=\"checkbox\" "+(sp.preparado?'checked':'')+" onchange=\"updateSpellData('"+sp.id+"', 'preparado', this.checked)\"> Preparado</label>";
-    html += "</div>";
+    html += `<div class="flex" style="gap:10px;font-size:0.8rem;color:#aaa;margin-bottom:4px;">
+      <label><input type="checkbox" ${sp.concentracion?'checked':''} onchange="updateSpellData('${sp.id}', 'concentracion', this.checked)"> Concentración</label>
+      <label><input type="checkbox" ${sp.preparado?'checked':''} onchange="updateSpellData('${sp.id}', 'preparado', this.checked)"> Preparado</label>
+    </div>`;
 
-    html += "<textarea placeholder=\"Descripcion\" style=\"width:100%;\" onfocus=\"this.rows=10\" onblur=\"this.rows=2\" onchange=\"updateSpellData('"+sp.id+"', 'desc', this.value)\">"+safeDesc+"</textarea>";
+    html += `<textarea placeholder="Descripción" style="width:100%;" onfocus="this.rows=10" onblur="this.rows=2" onchange="updateSpellData('${sp.id}', 'desc', this.value)">${safeDesc}</textarea>`;
     
     div.innerHTML = html;
     return div;
@@ -780,7 +794,9 @@ function createSpellElement(sp, isCantrip) {
 
 function addSpell(){
   openModal("Nuevo Hechizo", 
-    "<input id=\"spName\" placeholder=\"Nombre del hechizo\"><input type=\"number\" id=\"spLvl\" placeholder=\"Nivel (1-9)\" min=\"1\" max=\"9\" value=\"1\"><label><input type=\"checkbox\" id=\"spConc\"> Requiere Concentracion</label>", 
+    `<input id="spName" placeholder="Nombre del hechizo">
+     <input type="number" id="spLvl" placeholder="Nivel (1-9)" min="1" max="9" value="1">
+     <label><input type="checkbox" id="spConc"> Requiere Concentración</label>`, 
   () => {
     const lvl = parseInt(document.getElementById('spLvl').value);
     const name = document.getElementById('spName').value;
@@ -803,7 +819,8 @@ function addSpell(){
 
 function addCantrip(){
   openModal("Nuevo Truco", 
-    "<input id=\"spName\" placeholder=\"Nombre del truco\"><label><input type=\"checkbox\" id=\"spConc\"> Requiere Concentracion</label>", 
+    `<input id="spName" placeholder="Nombre del truco">
+     <label><input type="checkbox" id="spConc"> Requiere Concentración</label>`, 
   () => {
     const name = document.getElementById('spName').value;
     if(!name) return;
@@ -829,13 +846,13 @@ function usarTruco(id){
     
     if(sp.concentracion){
         if(concentracionActiva){
-            if(!confirm("Ya estas concentrado en \""+concentracionActiva.nombre+"\". Cambiar a \""+sp.nombre+"\"?")) return;
+            if(!confirm(`Ya estás concentrado en "${concentracionActiva.nombre}". ¿Cambiar a "${sp.nombre}"?`)) return;
         }
         concentracionActiva = { nombre: sp.nombre, desc: sp.desc };
         actualizarUIConcentracion();
     }
     
-    alert("Lanzas el truco \""+sp.nombre+"\".\n\nBonificador de ataque: "+document.getElementById('bonifAtq').value+"\nCD de Salvacion: "+document.getElementById('cdSalv').value);
+    alert(`Lanzas el truco "${sp.nombre}".\n\nBonificador de ataque: ${document.getElementById('bonifAtq').value}\nCD de Salvación: ${document.getElementById('cdSalv').value}`);
     guardarGeneral();
 }
 
@@ -851,13 +868,13 @@ function usarHechizo(id){
     );
     
     if(!hueco){
-        alert("No quedan slots de nivel "+lvl+" disponibles.");
+        alert(`No quedan slots de nivel ${lvl} disponibles.`);
         return;
     }
 
     if(sp.concentracion){
         if(concentracionActiva){
-            if(!confirm("Ya estas concentrado en \""+concentracionActiva.nombre+"\". Cambiar a \""+sp.nombre+"\"?")) return;
+            if(!confirm(`Ya estás concentrado en "${concentracionActiva.nombre}". ¿Cambiar a "${sp.nombre}"?`)) return;
         }
         concentracionActiva = { nombre: sp.nombre, desc: sp.desc };
         actualizarUIConcentracion();
@@ -867,7 +884,7 @@ function usarHechizo(id){
     hueco.classList.add('gastado');
     hueco.style.background = 'var(--usoOn)';
     
-    alert("Lanzas \""+sp.nombre+"\".\n\nBonificador de ataque: "+document.getElementById('bonifAtq').value+"\nCD de Salvacion: "+document.getElementById('cdSalv').value);
+    alert(`Lanzas "${sp.nombre}".\n\nBonificador de ataque: ${document.getElementById('bonifAtq').value}\nCD de Salvación: ${document.getElementById('cdSalv').value}`);
     guardarGeneral();
 }
 
@@ -883,22 +900,22 @@ function updateSpellData(id, key, value){
 }
 
 function deleteSpell(id){
-    if(confirm("Borrar este hechizo/truco?")){
+    if(confirm("¿Borrar este hechizo/truco?")){
         sheet.hechizos = sheet.hechizos.filter(s => s.id !== id);
         renderSpellsAndCantrips();
         guardarGeneral();
     }
 }
 
-/* ---------- DOTES Y RASGOS ---------- */
+/* ---------- DOTES Y RASGOS (ACTUALIZADO) ---------- */
 function addFeat(){
   const div=document.createElement('div');div.className='section';
-  div.innerHTML="<input placeholder=\"Nombre dote\" style=\"width:160px;\"><textarea placeholder=\"Descripcion\" rows=\"3\" style=\"width:100%;\" onfocus=\"this.rows=10\" onblur=\"this.rows=3\"></textarea>";
+  div.innerHTML='<input placeholder="Nombre dote" style="width:160px;" onchange="guardarGeneral()"><textarea placeholder="Descripción" rows="3" style="width:100%;" onfocus="this.rows=10" onblur="this.rows=3" onchange="guardarGeneral()"></textarea>';
   document.getElementById('featsList').appendChild(div);
 }
 function addTrait(){
   const div=document.createElement('div');div.className='section';
-  div.innerHTML="<input placeholder=\"Nombre rasgo\" style=\"width:160px;\"><textarea placeholder=\"Descripcion\" rows=\"3\" style=\"width:100%;\" onfocus=\"this.rows=10\" onblur=\"this.rows=3\"></textarea>";
+  div.innerHTML='<input placeholder="Nombre rasgo" style="width:160px;" onchange="guardarGeneral()"><textarea placeholder="Descripción" rows="3" style="width:100%;" onfocus="this.rows=10" onblur="this.rows=3" onchange="guardarGeneral()"></textarea>';
   document.getElementById('traitsList').appendChild(div);
 }
 
@@ -911,7 +928,7 @@ function renderActions(){
     setSafeText(btn, ac.name);
     btn.onclick=(e)=>{
       if(ac.goto){ switchTab(ac.goto, e); return; }
-      if(usedAction){alert('Ya usaste tu accion este turno.');return;}
+      if(usedAction){alert('Ya usaste tu acción este turno.');return;}
       showAction(ac);
       usedAction=true;
       updateActionButtons();
@@ -930,13 +947,13 @@ function renderArmas(){
     const bc = getBonifComp();
     const total = (w.bonus || 0) + mod + bc;
     w.total = total;
-    btn.textContent = "Atacar con "+w.nombre+" ("+w.dano+" + "+total+")";
+    btn.textContent = `Atacar con ${w.nombre} (${w.daño} + ${total})`;
     
     btn.dataset.index=i;
     btn.onclick=()=>{
-      if(usedAction && !multiataqueActivo){alert('Ya usaste tu accion este turno.');return;}
+      if(usedAction && !multiataqueActivo){alert('Ya usaste tu acción este turno.');return;}
       if(!multiataqueActivo)usedAction=true;
-      let msg="Atacas con "+w.nombre+" ("+w.dano+" + "+total+")\n\nMaestria: "+w.maestria.nombre+"\n"+w.maestria.desc;
+      let msg=`Atacas con ${w.nombre} (${w.daño} + ${total})\n\nMaestría: ${w.maestria.nombre}\n${w.maestria.desc}`;
       if(ventajaActiva)msg+='\n\nCon VENTAJA';
       if(desventajaActiva)msg+='\n\nCon DESVENTAJA';
       alert(msg);
@@ -951,7 +968,7 @@ function showAction(ac){
   if(!sheet.action_notes) sheet.action_notes = {};
   const currentNote = sheet.action_notes[ac.id] || '';
   
-  div.innerHTML = "<h4>"+ac.name+"</h4><p>"+ac.desc+"</p><textarea class=\"action-note\" placeholder=\"Notas para esta accion...\" rows=\"2\" oninput=\"saveActionNote('"+ac.id+"', this)\"></textarea>";
+  div.innerHTML = `<h4>${ac.name}</h4><p>${ac.desc}</p><textarea class="action-note" placeholder="Notas para esta acción..." rows="2" oninput="saveActionNote('${ac.id}', this)"></textarea>`;
   const ta = div.querySelector('textarea');
   if(ta) ta.value = currentNote;
   
@@ -974,7 +991,7 @@ function updateActionButtons(){
 function nextTurn(){
   ['accAdic','reaccion'].forEach(id=>{
     const el=document.getElementById(id);
-    sheet["txt_"+id]=el.value;
+    sheet[`txt_${id}`]=el.value;
     el.classList.add('hidden');
   });
   
@@ -985,36 +1002,36 @@ function nextTurn(){
   guardarGeneral();
 }
 function usarAccAdic(){
-  if(usedBonus){alert('Ya usaste tu accion adicional.');return;}
+  if(usedBonus){alert('Ya usaste tu acción adicional.');return;}
   const ta=document.getElementById('accAdic');
   ta.classList.remove('hidden');
-  ta.value=sheet["txt_"+ta.id]||'';
+  ta.value=sheet[`txt_${ta.id}`]||'';
   usedBonus=true;
   updateActionButtons();
   autoCerrar(ta);
 }
 function usarReaccion(){
-  if(usedReaction){alert('Ya usaste tu reaccion.');return;}
+  if(usedReaction){alert('Ya usaste tu reacción.');return;}
   const ta=document.getElementById('reaccion');
   ta.classList.remove('hidden');
-  ta.value=sheet["txt_"+ta.id]||'';
+  ta.value=sheet[`txt_${ta.id}`]||'';
   usedReaction=true;
   updateActionButtons();
   autoCerrar(ta);
 }
 function usarMultiataque(){
-  if(usedAction){alert('Ya usaste tu accion este turno.');return;}
+  if(usedAction){alert('Ya usaste tu acción este turno.');return;}
   multiataqueActivo=true;
   updateActionButtons();
 }
 function autoCerrar(el){ setTimeout(()=>{el.classList.add('hidden');},10000); }
 
 function pruebaATQ(){
-  if(usedAction && !multiataqueActivo){alert('Ya usaste tu accion.');return;}
-  let optionsHtml = "<select id=\"modalSelect\" style=\"width:100%;padding:10px;margin-bottom:10px;\">";
-  optionsHtml += "<option value=\"0\">Lanzar hechizo</option>";
-  armas.forEach((w,i) => optionsHtml += "<option value=\""+(i+1)+"\">Atacar con "+w.nombre+"</option>");
-  optionsHtml += "</select>";
+  if(usedAction && !multiataqueActivo){alert('Ya usaste tu acción.');return;}
+  let optionsHtml = `<select id="modalSelect" style="width:100%;padding:10px;margin-bottom:10px;">`;
+  optionsHtml += `<option value="0">Lanzar hechizo</option>`;
+  armas.forEach((w,i) => optionsHtml += `<option value="${i+1}">Atacar con ${w.nombre}</option>`);
+  optionsHtml += `</select>`;
   
   openModal("Prueba de Ataque", optionsHtml, () => {
     const idx = parseInt(document.getElementById('modalSelect').value);
@@ -1026,10 +1043,10 @@ function pruebaATQ(){
       if(!stat){alert('Selecciona stat de lanzador en hechizos.');return;}
       const mod=getMod(stat), bc=getBonifComp();
       const total=mod+bc;
-      msg = "1d20 + "+total;
+      msg = `1d20 + ${total}`;
     }else{
       const w=armas[idx-1];
-      msg = "1d20 + "+w.total;
+      msg = `1d20 + ${w.total}`;
     }
     
     if(ventajaActiva)msg+=' (tira dos veces, elige la MEJOR)';
@@ -1045,7 +1062,7 @@ function tirarIniciativa(){
   const mod=getMod('destreza');
   const bonus=parseInt(document.getElementById('iniciativaBonus').value)||0;
   const total=mod+bonus;
-  let msg="1d20 + "+total;
+  let msg=`1d20 + ${total}`;
   if(ventajaIni)msg+=' (tira dos veces, elige la MEJOR)';
   if(desventajaIni)msg+=' (tira dos veces, elige la PEOR)';
   alert(msg);
@@ -1053,10 +1070,10 @@ function tirarIniciativa(){
 
 function equiparArma(){
   if(armas.length>=3){
-    if(!confirm('Ya tienes 3 armas equipadas. Quieres sustituir una?'))return;
+    if(!confirm('Ya tienes 3 armas equipadas. ¿Quieres sustituir una?'))return;
     let listaOpt = "";
-    armas.forEach((w,i) => listaOpt += "<option value=\""+i+"\">"+w.nombre+"</option>");
-    openModal("Sustituir Arma", "Selecciona arma a sustituir:<select id=\"modalReplace\">"+listaOpt+"</select>", () => {
+    armas.forEach((w,i) => listaOpt += `<option value="${i}">${w.nombre}</option>`);
+    openModal("Sustituir Arma", `Selecciona arma a sustituir:<select id="modalReplace">${listaOpt}</select>`, () => {
         const pos = parseInt(document.getElementById('modalReplace').value);
         armas.splice(pos,1);
         renderArmas();
@@ -1069,30 +1086,39 @@ function equiparArma(){
 
 function askNewWeapon() {
      openModal("Equipar Arma", 
-    "<input id=\"wName\" placeholder=\"Nombre del arma\"><input id=\"wDmg\" placeholder=\"Dano (ej. 1d8)\"><input type=\"number\" id=\"wBonus\" placeholder=\"Bonus (+1, +2...)\" value=\"0\"><label>Stat asociado:<select id=\"wStat\" style=\"width:100%\"><option value=\"fuerza\">Fuerza</option><option value=\"destreza\">Destreza</option></select></label><label>Maestria:<select id=\"wMastery\" style=\"width:100%;margin-top:5px;\">"+maestrias.map((m,i)=>"<option value=\""+i+"\">"+m.nombre+"</option>").join('')+"</select></label>",
+    `<input id="wName" placeholder="Nombre del arma">
+     <input id="wDmg" placeholder="Daño (ej. 1d8)">
+     <input type="number" id="wBonus" placeholder="Bonus (+1, +2...)" value="0">
+     <label>Stat asociado:<select id="wStat" style="width:100%">
+        <option value="fuerza">Fuerza</option>
+        <option value="destreza">Destreza</option>
+     </select></label>
+     <label>Maestría:<select id="wMastery" style="width:100%;margin-top:5px;">
+        ${maestrias.map((m,i)=>`<option value="${i}">${m.nombre}</option>`).join('')}
+     </select></label>`,
   () => {
     const nombre = document.getElementById('wName').value;
-    const dano = document.getElementById('wDmg').value;
+    const daño = document.getElementById('wDmg').value;
     const bonusArma = parseInt(document.getElementById('wBonus').value) || 0;
     const statName = document.getElementById('wStat').value;
     const maestria = maestrias[parseInt(document.getElementById('wMastery').value)];
-    if(!nombre || !dano) return;
+    if(!nombre || !daño) return;
     
     const mod=getMod(statName);
     const bc=getBonifComp();
     const total=bonusArma+mod+bc;
     
-    armas.push({nombre, dano, total, maestria, statAsociado: statName, bonus: bonusArma});
+    armas.push({nombre, daño, total, maestria, statAsociado: statName, bonus: bonusArma});
     renderArmas();guardarGeneral();
   });
 }
 
 function desequiparArma(){
   if(armas.length===0){alert('No tienes armas equipadas.');return;}
-  let optionsHtml = "<select id=\"modalSelect\">";
-  armas.forEach((w,i) => optionsHtml += "<option value=\""+i+"\">"+w.nombre+"</option>");
-  optionsHtml += "</select>";
-  openModal("Desequipar", "Selecciona arma para desequipar:<br>" + optionsHtml, () => {
+  let selectHtml = `<select id="modalSelect">`;
+  armas.forEach((w,i) => selectHtml += `<option value="${i}">${w.nombre}</option>`);
+  selectHtml += `</select>`;
+  openModal("Desequipar", "Selecciona arma para desequipar:<br>" + selectHtml, () => {
     const pos = parseInt(document.getElementById('modalSelect').value);
     if(isNaN(pos)) return;
     armas.splice(pos,1);
@@ -1126,7 +1152,7 @@ function actualizarPanelEstados(){
   let html = "";
   activos.forEach(id=>{
     const st=states.find(s=>s.id===id);
-    html += "<strong>"+st.name+"</strong>: "+st.desc+"<br><br>";
+    html += `<strong>${st.name}</strong>: ${st.desc}<br><br>`;
   });
   panel.innerHTML = html;
 }
@@ -1146,7 +1172,9 @@ function actualizarAlertaEstado(){
 /* ---------- HABILIDADES ESPECIALES ---------- */
 function addHabEspecial(){
   openModal("Nueva Habilidad Especial", 
-    "<input id=\"hName\" placeholder=\"Nombre\"><input type=\"number\" id=\"hUses\" placeholder=\"Usos por descanso largo\" min=\"1\"><textarea id=\"hDesc\" placeholder=\"Descripcion (opcional)\"></textarea>",
+    `<input id="hName" placeholder="Nombre">
+     <input type="number" id="hUses" placeholder="Usos por descanso largo" min="1">
+     <textarea id="hDesc" placeholder="Descripción (opcional)"></textarea>`,
   () => {
     const nombre = document.getElementById('hName').value;
     const usos = parseInt(document.getElementById('hUses').value);
@@ -1159,9 +1187,9 @@ function addHabEspecial(){
 }
 function delHabEspecial(){
   if(habSpecs.length===0){alert('No hay habilidades que borrar');return;}
-  let optionsHtml = "<select id=\"modalSelect\">";
-  habSpecs.forEach((h,i) => optionsHtml += "<option value=\""+i+"\">"+h.nombre+"</option>");
-  optionsHtml += "</select>";
+  let optionsHtml = `<select id="modalSelect">`;
+  habSpecs.forEach((h,i) => optionsHtml += `<option value="${i}">${h.nombre}</option>`);
+  optionsHtml += `</select>`;
   openModal("Borrar Habilidad", "Selecciona la habilidad:<br>" + optionsHtml, () => {
     const pos = parseInt(document.getElementById('modalSelect').value);
     if(isNaN(pos)) return;
@@ -1174,13 +1202,13 @@ function renderHabSpecs(){
   div.innerHTML='';
   habSpecs.forEach((h,idx)=>{
     const s=document.createElement('div');s.className='section';
-    let html="<div class=\"flex\"><strong>"+h.nombre+"</strong><span style=\"margin-left:auto;\">"+h.usos+" usos</span></div>";
-    if(h.desc)html+="<p style=\"font-size:0.85rem;\">"+h.desc+"</p>";
-    html+="<div class=\"hab-spec-row\">";
+    let html=`<div class="flex"><strong>${h.nombre}</strong><span style="margin-left:auto;">${h.usos} usos</span></div>`;
+    if(h.desc)html+=`<p style="font-size:0.85rem;">${h.desc}</p>`;
+    html+=`<div class="hab-spec-row">`;
     for(let i=0;i<h.usos;i++){
-      html+="<button class=\"hab-hueco "+(h.slots[i]?'gastado':'')+"\" onclick=\"toggleHabSlot("+idx+","+i+")\"></button>";
+      html+=`<button class="hab-hueco ${h.slots[i]?'gastado':''}" onclick="toggleHabSlot(${idx},${i})"></button>`;
     }
-    html+="</div>";
+    html+=`</div>`;
     s.innerHTML = html;
     div.appendChild(s);
   });
@@ -1190,19 +1218,21 @@ function toggleHabSlot(idx,i){
   renderHabSpecs();guardarGeneral();
 }
 
-/* ---------- NPC Y NOTAS ---------- */
+/* ---------- NPC Y NOTAS (ACTUALIZADO) ---------- */
 function addNpc(){
   const div=document.createElement('div');div.className='section';
-  div.innerHTML="<input placeholder=\"Nombre NPC\" style=\"width:160px;\"><textarea placeholder=\"Nota\" rows=\"2\" style=\"width:100%;\"></textarea>";
+  div.innerHTML='<input placeholder="Nombre NPC" style="width:160px;" onchange="guardarGeneral()"><textarea placeholder="Nota" rows="2" style="width:100%;" onchange="guardarGeneral()"></textarea>';
   document.getElementById('npcList').appendChild(div);
 }
+
 function addSessionNote(){
-  openModal("Nota de Sesion", "<textarea id=\"modalInput\" style=\"height:80px;width:100%\" placeholder=\"Escribe aqui...\"></textarea>", () => {
+  openModal("Nota de Sesión", `<textarea id="modalInput" style="height:80px;width:100%" placeholder="Escribe aquí..."></textarea>`, () => {
     const note = document.getElementById('modalInput').value;
     if(!note) return;
     const p=document.createElement('p');
-    p.textContent=new Date().toLocaleString()+' - '+note;
+    p.textContent=new Date().toLocaleString()+' – '+note;
     document.getElementById('sessionNotes').appendChild(p);
+    guardarGeneral(); // Guardar después de añadir
   });
 }
 
@@ -1236,11 +1266,14 @@ function descansoCorto(){
   const dadosDisponibles=nivel - sheet.dadosGastados;
   
   openModal("Descanso Corto", 
-    "Cuantos dados de golpe gastas? (Disponibles: "+dadosDisponibles+")<br><input type=\"number\" id=\"dcDados\" min=\"0\" max=\""+dadosDisponibles+"\" value=\"0\"><br><br>Puntos de vida recuperados (tira los dados fuera de aqui):<br><input type=\"number\" id=\"dcPV\" min=\"0\">",
+    `¿Cuántos dados de golpe gastas? (Disponibles: ${dadosDisponibles})<br>
+     <input type="number" id="dcDados" min="0" max="${dadosDisponibles}" value="0"><br><br>
+     Puntos de vida recuperados (tira los dados fuera de aquí):<br>
+     <input type="number" id="dcPV" min="0">`,
   () => {
     const gastarNum = parseInt(document.getElementById('dcDados').value)||0;
     if(gastarNum < 0 || gastarNum > dadosDisponibles){
-      alert("Solo tienes "+dadosDisponibles+" dados disponibles."); return;
+      alert(`Solo tienes ${dadosDisponibles} dados disponibles.`); return;
     }
     const pvNum = parseInt(document.getElementById('dcPV').value)||0;
     const act=parseInt(document.getElementById('hpAct').value)||0;
@@ -1263,7 +1296,7 @@ function descansoCorto(){
 }
 
 function descansoLargo(){
-  if(!confirm("Confirmar descanso largo?")) return;
+  if(!confirm("¿Confirmar descanso largo?")) return;
   const max=document.getElementById('hpMax').value;
   document.getElementById('hpAct').value=max;
   document.getElementById('hpTemp').value = 0;
@@ -1284,10 +1317,10 @@ function descansoLargo(){
   
   desactivarEstados();
   renderHabSpecs();guardarGeneral();
-  alert("Descanso largo completado.\nHas recuperado "+recuperados+" dados de golpe.");
+  alert(`Descanso largo completado.\nHas recuperado ${recuperados} dados de golpe.`);
 }
 
-/* ---------- GUARDADO / CARGA ---------- */
+/* ---------- GUARDADO / CARGA (SISTEMA MEJORADO) ---------- */
 function guardarGeneral(){
   const ids = ['nombre','nivel','ca','hpMax','hpAct','hpTemp','caTemp','bonifComp','velPies','velMetros','velCas','oro','plata','bronce','inventario','backstory','alignCurrent','maestrias','modHabLanz','cdSalv','bonifAtq','raza','clase','subclase','trasfondo','idiomas','descripcion','notasLibres','dadosGolpe'];
   
@@ -1308,6 +1341,25 @@ function guardarGeneral(){
   sheet.invObj1 = document.getElementById('invObj1').value;
   sheet.invObj2 = document.getElementById('invObj2').value;
   sheet.invObj3 = document.getElementById('invObj3').value;
+
+  // Guardar Dotes y Rasgos dinámicos
+  sheet.feats = [...document.querySelectorAll('#featsList > div')].map(div => ({
+      nombre: div.querySelector('input')?.value || '',
+      desc: div.querySelector('textarea')?.value || ''
+  }));
+  sheet.traits = [...document.querySelectorAll('#traitsList > div')].map(div => ({
+      nombre: div.querySelector('input')?.value || '',
+      desc: div.querySelector('textarea')?.value || ''
+  }));
+  
+  // Guardar NPCs dinámicos
+  sheet.npcs = [...document.querySelectorAll('#npcList > div')].map(div => ({
+      nombre: div.querySelector('input')?.value || '',
+      nota: div.querySelector('textarea')?.value || ''
+  }));
+
+  // Notas de sesión
+  sheet.sessionNotes = document.getElementById('sessionNotes').innerHTML;
 
   sheet.stats={};
   [...document.querySelectorAll('.stat-card')].forEach(card=>{
@@ -1334,37 +1386,66 @@ function guardarGeneral(){
   sheet.inspiracionActiva=inspiracionActiva;
   sheet.ventajaIni=ventajaIni;
   sheet.desventajaIni=desventajaIni;
+  
   store();
 }
-function store(){try{localStorage.setItem('dndSheet',JSON.stringify(sheet));}catch(e){console.warn('localStorage no disponible',e);}}
-function saveSheet(){
-  guardarGeneral();
-  try {
-    const data=JSON.stringify(sheet,null,2), blob=new Blob([data],{type:'application/json'});
-    const a=document.createElement('a');
-    a.href=URL.createObjectURL(blob);a.download='ficha.json';a.click();
-    alert("Ficha guardada correctamente.");
-  } catch(e) {
-    alert("Error al guardar el archivo: " + e.message);
+
+function store(){
+  try{
+    localStorage.setItem('dndSheet',JSON.stringify(sheet));
+    showSaveStatus("Guardado automático ✓");
+  }catch(e){
+    console.warn('localStorage no disponible',e);
+    showSaveStatus("Error: Memoria llena o bloqueada");
   }
 }
-function loadSheet(){
-  if(!confirm('Cargar ficha? Se sobrescribira todo el estado actual.'))return;
-  const input=document.createElement('input');
-  input.type='file';input.accept='.json';
-  input.onchange=e=>{
-    const file=e.target.files[0];if(!file)return;
-    const reader=new FileReader();
-    reader.onload=evt=>{
-      try{
-        sheet=JSON.parse(evt.target.result);
-        store();
-        location.reload();
-      }catch{alert('Archivo invalido');}
-    };
-    reader.readAsText(file);
-  };
-  input.click();
+
+function showSaveStatus(msg) {
+  const el = document.getElementById('saveStatus');
+  el.textContent = msg;
+  setTimeout(() => { el.textContent = "Autoguardado activo"; }, 2000);
+}
+
+/* EXPORTAR */
+function exportSheet() {
+  guardarGeneral();
+  const data = JSON.stringify(sheet, null, 2);
+  
+  openModal("Exportar Ficha", 
+    `<p style="font-size:0.9rem;margin-bottom:10px;">Copia este texto y guárdalo en un archivo de texto seguro:</p>
+     <textarea id="exportArea" style="height:200px;font-size:0.8rem;width:100%;" readonly>${data}</textarea>`, 
+  () => { /* Cerrar */ });
+  
+  setTimeout(() => {
+    const ta = document.getElementById('exportArea');
+    if(ta) { ta.select(); ta.setSelectionRange(0, 99999); }
+  }, 100);
+}
+
+/* IMPORTAR */
+function importSheet() {
+  openModal("Importar Ficha", 
+    `<p style="font-size:0.9rem;margin-bottom:10px;">Pega aquí el texto JSON que copiaste:</p>
+     <textarea id="importArea" style="height:200px;font-size:0.8rem;width:100%;" placeholder="Pega aquí el JSON..."></textarea>`, 
+  () => {
+    const raw = document.getElementById('importArea').value;
+    if(!raw) { alert("No has pegado nada."); return; }
+    try {
+      // Limpiamos el texto por si acaso
+      const cleanRaw = raw.trim();
+      const obj = JSON.parse(cleanRaw);
+      if(confirm("¿Sobrescribir la ficha actual con los datos pegados?")) {
+        // Reseteamos sheet y guardamos
+        sheet = {}; 
+        // Guardamos en localStorage
+        localStorage.setItem('dndSheet', JSON.stringify(obj));
+        // Recargamos página para aplicar
+        location.reload(); 
+      }
+    } catch(e) {
+      alert("Error: El texto pegado no es válido.\n" + e.message);
+    }
+  });
 }
 
 /* ---------- INICIALIZAR ---------- */
@@ -1405,9 +1486,44 @@ document.addEventListener('DOMContentLoaded', function(){
     if(sheet.invObj2) document.getElementById('invObj2').value = sheet.invObj2;
     if(sheet.invObj3) document.getElementById('invObj3').value = sheet.invObj3;
 
+    // Cargar Dotes
+    if(sheet.feats) {
+        const list = document.getElementById('featsList');
+        list.innerHTML = '';
+        sheet.feats.forEach(f => {
+            const div=document.createElement('div');div.className='section';
+            div.innerHTML=`<input placeholder="Nombre dote" style="width:160px;" value="${f.nombre}" onchange="guardarGeneral()"><textarea placeholder="Descripción" rows="3" style="width:100%;" onfocus="this.rows=10" onblur="this.rows=3" onchange="guardarGeneral()">${f.desc}</textarea>`;
+            list.appendChild(div);
+        });
+    }
+    // Cargar Rasgos
+    if(sheet.traits) {
+        const list = document.getElementById('traitsList');
+        list.innerHTML = '';
+        sheet.traits.forEach(t => {
+            const div=document.createElement('div');div.className='section';
+            div.innerHTML=`<input placeholder="Nombre rasgo" style="width:160px;" value="${t.nombre}" onchange="guardarGeneral()"><textarea placeholder="Descripción" rows="3" style="width:100%;" onfocus="this.rows=10" onblur="this.rows=3" onchange="guardarGeneral()">${t.desc}</textarea>`;
+            list.appendChild(div);
+        });
+    }
+    // Cargar NPCs
+    if(sheet.npcs) {
+        const list = document.getElementById('npcList');
+        list.innerHTML = '';
+        sheet.npcs.forEach(n => {
+            const div=document.createElement('div');div.className='section';
+            div.innerHTML=`<input placeholder="Nombre NPC" style="width:160px;" value="${n.nombre}" onchange="guardarGeneral()"><textarea placeholder="Nota" rows="2" style="width:100%;" onchange="guardarGeneral()">${n.nota}</textarea>`;
+            list.appendChild(div);
+        });
+    }
+    // Cargar Notas de Sesión
+    if(sheet.sessionNotes) {
+        document.getElementById('sessionNotes').innerHTML = sheet.sessionNotes;
+    }
+
     if(sheet.stats){
       Object.keys(sheet.stats).forEach(stat=>{
-        const card=document.querySelector(".stat-card[data-stat=\""+stat+"\"]");
+        const card=document.querySelector(`.stat-card[data-stat="${stat}"]`);
         if(card){
           card.querySelector('.puntos').value=sheet.stats[stat].puntos;
           sheet.stats[stat].habilidades.forEach((obj,i)=>{
@@ -1431,7 +1547,7 @@ document.addEventListener('DOMContentLoaded', function(){
     }
     if(sheet.estados){
       sheet.estados.forEach(est=>{
-        const btn=document.querySelector(".state-btn[data-id=\""+est.id+"\"]");
+        const btn=document.querySelector(`.state-btn[data-id="${est.id}"]`);
         if(btn){btn.classList.toggle('on',est.on);btn.classList.toggle('off',!est.on);}
       });
       actualizarPanelEstados();actualizarAlertaEstado();
@@ -1467,6 +1583,6 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 </script>
 <p style="bottom: 10px; right: 10px; position: absolute;"><a href="https://wordtohtml.net/?utm_source=wth_free_doc_conversion_link&utm_medium=external" target="_blank" style="font-size:11px; color: #d0d0d0">Convertido a HTML con WordToHTML.net</a><span style="font-size:11px; color: #d0d0d0"> | </span><a href="https://documentconverter.pro/?utm_source=wth_free_doc_conversion_link&utm_medium=external" target="_blank" style="font-size:11px; color: #d0d0d0">Convertidor de Documentos para Windows</a></p>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"version":"2024.11.0","token":"4581d6a58cf94e929fad52deda295622","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d41d87019ab031c',t:'MTc3MjEzNDEwNQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script defer src="https://static.cloudflareinsights.com/beacon.min.js/v67327c56f0bb4ef8b305cae61679db8f1769101564043" integrity="sha512-rdcWY47ByXd76cbCFzznIcEaCN71jqkWBBqlwhF1SY7KubdLKZiEGeP7AyieKZlGP9hbY/MhGrwXzJC/HulNyg==" data-cf-beacon='{"version":"2024.11.0","token":"4581d6a58cf94e929fad52deda295622","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 </html>
